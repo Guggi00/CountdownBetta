@@ -1,37 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Countdown Timer Page</title>
-<style>
-  body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%; /* Ensures the body and html take up full viewport height */
-    overflow: hidden; /* Prevents scrollbars if iframe fits perfectly */
-  }
-  .iframe-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-  }
-  iframe {
-    /* Your existing iframe styles, adjusted for better integration if needed */
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 16/7;
-    background-color: #FF0080;
-    border-radius: 5px;
-    border: 0; /* frameborder is deprecated, use border: 0; in CSS */
-  }
-</style>
+  <title>Countdown Timer Page</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background-color: #FF0080;
+      color: white;
+    }
+
+    .timer-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+      font-size: 4vw;
+      text-align: center;
+    }
+
+    .timer-box {
+      background-color: rgba(0, 0, 0, 0.2);
+      padding: 2rem;
+      border-radius: 10px;
+    }
+
+    .time-part {
+      margin: 0 10px;
+      display: inline-block;
+    }
+  </style>
 </head>
 <body>
 
-<div class="iframe-container">
-  <iframe src="https://countingdownto.com/w4/g_kk7H8d" frameborder="0" style="width:100%;height:100%;aspect-ratio:16/7;background-color:#FF0080;border-radius:5px;"></iframe>
+<div class="timer-container">
+  <div class="timer-box" id="countdown">
+    <!-- Timer will be inserted here by JavaScript -->
+  </div>
 </div>
+
+<script>
+  // Set your target date and time (year, month (0–11), day, hour, minute, second)
+  const targetDate = new Date("2025-12-31T23:59:59");
+
+  function updateCountdown() {
+    const now = new Date();
+    const diff = targetDate - now;
+
+    if (diff <= 0) {
+      document.getElementById("countdown").innerHTML = "Countdown Complete!";
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    document.getElementById("countdown").innerHTML = `
+      <span class="time-part">${days}d</span>
+      <span class="time-part">${hours}h</span>
+      <span class="time-part">${minutes}m</span>
+      <span class="time-part">${seconds}s</span>
+    `;
+  }
+
+  // Update countdown every second
+  setInterval(updateCountdown, 1000);
+  updateCountdown(); // initial call
+</script>
 
 </body>
 </html>
