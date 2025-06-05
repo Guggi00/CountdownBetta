@@ -7,17 +7,16 @@
       margin: 0;
       padding: 0;
       height: 100%;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
       background-color: #FF0080;
       color: white;
+      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       text-align: center;
     }
 
-    .counter-container {
+    .container {
       padding: 2rem;
     }
 
@@ -28,49 +27,43 @@
 
     .counter {
       font-size: 3rem;
-      background-color: rgba(0, 0, 0, 0.2);
+      background-color: rgba(0, 0, 0, 0.3);
       padding: 1rem 2rem;
-      border-radius: 15px;
+      border-radius: 12px;
       display: inline-block;
     }
 
     .time-part {
-      margin: 0 8px;
+      margin: 0 10px;
     }
   </style>
 </head>
 <body>
 
-<div class="counter-container">
+<div class="container">
   <div class="title">Tempo dall'ultimo abbraccio con la Betta</div>
   <div class="counter" id="counter">
-    <!-- Time will be shown here -->
+    Loading...
   </div>
 </div>
 
 <script>
-  function getTodayAtHourMinute(hour, minute) {
-    const now = new Date();
-    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute, 0);
-    // If selected time is in the future, subtract one day
-    if (start > now) {
-      start.setDate(start.getDate() - 1);
-    }
-    return start;
-  }
-
-  const startTime = getTodayAtHourMinute(20, 57); // today at 20:57
+  // Set the fixed starting time (05/06/2025 at 20:57)
+  const startTime = new Date("2025-06-05T20:57:00");
 
   function updateCounter() {
     const now = new Date();
     let diff = now - startTime;
 
-    if (diff < 0) diff = 0;
+    if (diff < 0) {
+      document.getElementById("counter").innerHTML = "Non è ancora successo 💔";
+      return;
+    }
 
-    const seconds = Math.floor((diff / 1000) % 60);
-    const minutes = Math.floor((diff / 1000 / 60) % 60);
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
 
     document.getElementById("counter").innerHTML = `
       <span class="time-part">${days}d</span>
