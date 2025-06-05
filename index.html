@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Countdown Timer Page</title>
+  <title>Time Since Last Hug</title>
   <style>
     body, html {
       margin: 0;
@@ -11,57 +11,68 @@
       font-family: Arial, sans-serif;
       background-color: #FF0080;
       color: white;
-    }
-
-    .timer-container {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100%;
-      width: 100%;
-      font-size: 4vw;
       text-align: center;
     }
 
-    .timer-box {
-      background-color: rgba(0, 0, 0, 0.2);
+    .counter-container {
       padding: 2rem;
-      border-radius: 10px;
+    }
+
+    .title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .counter {
+      font-size: 3rem;
+      background-color: rgba(0, 0, 0, 0.2);
+      padding: 1rem 2rem;
+      border-radius: 15px;
+      display: inline-block;
     }
 
     .time-part {
-      margin: 0 10px;
-      display: inline-block;
+      margin: 0 8px;
     }
   </style>
 </head>
 <body>
 
-<div class="timer-container">
-  <div class="timer-box" id="countdown">
-    <!-- Timer will be inserted here by JavaScript -->
+<div class="counter-container">
+  <div class="title">Tempo dall'ultimo abbraccio con la Betta</div>
+  <div class="counter" id="counter">
+    <!-- Time will be shown here -->
   </div>
 </div>
 
 <script>
-  // Set your target date and time (year, month (0–11), day, hour, minute, second)
-  const targetDate = new Date("2025-12-31T23:59:59");
-
-  function updateCountdown() {
+  function getTodayAtHourMinute(hour, minute) {
     const now = new Date();
-    const diff = targetDate - now;
-
-    if (diff <= 0) {
-      document.getElementById("countdown").innerHTML = "Countdown Complete!";
-      return;
+    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute, 0);
+    // If selected time is in the future, subtract one day
+    if (start > now) {
+      start.setDate(start.getDate() - 1);
     }
+    return start;
+  }
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+  const startTime = getTodayAtHourMinute(20, 57); // today at 20:57
+
+  function updateCounter() {
+    const now = new Date();
+    let diff = now - startTime;
+
+    if (diff < 0) diff = 0;
+
     const seconds = Math.floor((diff / 1000) % 60);
+    const minutes = Math.floor((diff / 1000 / 60) % 60);
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-    document.getElementById("countdown").innerHTML = `
+    document.getElementById("counter").innerHTML = `
       <span class="time-part">${days}d</span>
       <span class="time-part">${hours}h</span>
       <span class="time-part">${minutes}m</span>
@@ -69,9 +80,8 @@
     `;
   }
 
-  // Update countdown every second
-  setInterval(updateCountdown, 1000);
-  updateCountdown(); // initial call
+  updateCounter();
+  setInterval(updateCounter, 1000);
 </script>
 
 </body>
