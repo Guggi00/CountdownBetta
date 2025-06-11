@@ -109,18 +109,16 @@
     `;
   }
 
-  // Thought counter with max 30s
-  const maxStartOffset = 30 * 1000; // 30 seconds in ms
-  const startOffset = Math.floor(Math.random() * maxStartOffset); // random starting value
+  // Thought counter — max 3 minutes
+  const maxStartOffset = 180 * 1000; // 3 minutes in ms
+  const startOffset = Math.floor(Math.random() * maxStartOffset);
   let thoughtStartTime = new Date(Date.now() - startOffset);
-
-  // First reset happens between current offset and 30s
   let firstReset = true;
   let nextResetInterval = maxStartOffset - startOffset;
 
   function getRandomResetTime() {
     const min = 2 * 1000;
-    const max = 30 * 1000;
+    const max = 180 * 1000;
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
@@ -150,8 +148,8 @@
 
   function triggerHeartAnimation() {
     const heart = document.getElementById("heart");
-    heart.style.animation = 'none'; // reset animation
-    void heart.offsetWidth;         // trigger reflow
+    heart.style.animation = 'none';
+    void heart.offsetWidth;
     heart.style.animation = 'pop 5s ease-out forwards';
   }
 
