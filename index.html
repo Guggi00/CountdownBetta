@@ -26,11 +26,12 @@
     }
 
     .counter {
-      font-size: 3rem;
+      font-size: 2.5rem;
       background-color: rgba(0, 0, 0, 0.3);
       padding: 1rem 2rem;
       border-radius: 12px;
       display: inline-block;
+      margin-bottom: 2rem;
     }
 
     .time-part {
@@ -42,21 +43,22 @@
 
 <div class="container">
   <div class="title">Tempo dall'ultimo abbraccio con la Betta</div>
-  <div class="counter" id="counter">
-    Loading...
-  </div>
+  <div class="counter" id="hugCounter">Loading...</div>
+
+  <div class="title">Tempo dall'ultima volta che ho pensato alla Betta</div>
+  <div class="counter" id="thoughtCounter">Loading...</div>
 </div>
 
 <script>
-  // Set the fixed starting time (05/06/2025 at 20:57)
-  const startTime = new Date("2025-06-07T03:22:00");
+  // First timer: fixed datetime (hug)
+  const hugStartTime = new Date("2025-06-07T03:22:00");
 
-  function updateCounter() {
+  function updateHugCounter() {
     const now = new Date();
-    let diff = now - startTime;
+    let diff = now - hugStartTime;
 
     if (diff < 0) {
-      document.getElementById("counter").innerHTML = "Non è ancora successo 💔";
+      document.getElementById("hugCounter").innerHTML = "Non è ancora successo 💔";
       return;
     }
 
@@ -65,7 +67,7 @@
     const minutes = Math.floor((diff / (1000 * 60)) % 60);
     const seconds = Math.floor((diff / 1000) % 60);
 
-    document.getElementById("counter").innerHTML = `
+    document.getElementById("hugCounter").innerHTML = `
       <span class="time-part">${days}d</span>
       <span class="time-part">${hours}h</span>
       <span class="time-part">${minutes}m</span>
@@ -73,8 +75,43 @@
     `;
   }
 
-  updateCounter();
-  setInterval(updateCounter, 1000);
+  // Second timer: thought counter
+  let thoughtStartTime = new Date();
+  let nextResetInterval = getRandomResetTime(); // in ms
+
+  function getRandomResetTime() {
+    const min = 2 * 1000;         // 2 seconds
+    const max = 5 * 60 * 1000;    // 5 minutes
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function updateThoughtCounter() {
+    const now = new Date();
+    const diff = now - thoughtStartTime;
+
+    if (diff >= nextResetInterval) {
+      thoughtStartTime = new Date();
+      nextResetInterval = getRandomResetTime();
+    }
+
+    const seconds = Math.floor((diff / 1000) % 60);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    document.getElementById("thoughtCounter").innerHTML = `
+      <span class="time-part">${days}d</span>
+      <span class="time-part">${hours}h</span>
+      <span class="time-part">${minutes}m</span>
+      <span class="time-part">${seconds}s</span>
+    `;
+  }
+
+  // Start intervals
+  updateHugCounter();
+  updateThoughtCounter();
+  setInterval(updateHugCounter, 1000);
+  setInterval(updateThoughtCounter, 1000);
 </script>
 
 </body>
