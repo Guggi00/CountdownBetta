@@ -11,13 +11,14 @@
       color: white;
       font-family: Arial, sans-serif;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
       text-align: center;
     }
 
     .container {
       padding: 2rem;
+      max-width: 600px;
     }
 
     .title {
@@ -37,6 +38,54 @@
     .time-part {
       margin: 0 10px;
     }
+
+    .heart {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      font-size: 4rem;
+      opacity: 0;
+      animation: pop 1.5s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes pop {
+      0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+      }
+      30% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0.8);
+        opacity: 0;
+      }
+    }
+
+    .log {
+      font-size: 1rem;
+      margin-top: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+      background: rgba(0,0,0,0.2);
+      padding: 1rem;
+      border-radius: 8px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .log-title {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .log-entry {
+      text-align: left;
+      margin-bottom: 0.3rem;
+    }
   </style>
 </head>
 <body>
@@ -47,10 +96,18 @@
 
   <div class="title">Tempo dall'ultima volta che ho pensato alla Betta</div>
   <div class="counter" id="thoughtCounter">Loading...</div>
+
+  <div class="log">
+    <div class="log-title">🌸 Pensieri alla Betta:</div>
+    <div id="logEntries"></div>
+  </div>
 </div>
 
+<!-- Heart animation element -->
+<div class="heart" id="heart">❤️</div>
+
 <script>
-  // First timer: fixed datetime (hug)
+  // First counter – Hug
   const hugStartTime = new Date("2025-06-07T03:22:00");
 
   function updateHugCounter() {
@@ -75,9 +132,9 @@
     `;
   }
 
-  // Second timer: thought counter
+  // Second counter – Thought with random reset
   let thoughtStartTime = new Date();
-  let nextResetInterval = getRandomResetTime(); // in ms
+  let nextResetInterval = getRandomResetTime();
 
   function getRandomResetTime() {
     const min = 2 * 1000;         // 2 seconds
@@ -90,6 +147,8 @@
     const diff = now - thoughtStartTime;
 
     if (diff >= nextResetInterval) {
+      logThought(now);
+      triggerHeartAnimation();
       thoughtStartTime = new Date();
       nextResetInterval = getRandomResetTime();
     }
@@ -107,7 +166,22 @@
     `;
   }
 
-  // Start intervals
+  function logThought(time) {
+    const logContainer = document.getElementById("logEntries");
+    const entry = document.createElement("div");
+    entry.className = "log-entry";
+    entry.textContent = `🕒 Pensato alla Betta alle ${time.toLocaleTimeString()}`;
+    logContainer.prepend(entry); // newest on top
+  }
+
+  function triggerHeartAnimation() {
+    const heart = document.getElementById("heart");
+    heart.style.animation = 'none'; // reset
+    void heart.offsetWidth; // force reflow
+    heart.style.animation = 'pop 1.5s ease-out forwards';
+  }
+
+  // Start updates
   updateHugCounter();
   updateThoughtCounter();
   setInterval(updateHugCounter, 1000);
