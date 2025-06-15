@@ -46,8 +46,11 @@
       transform: translate(-50%, -50%) scale(1);
       font-size: 4rem;
       opacity: 0;
-      animation: pop 5s ease-out forwards;
       pointer-events: none;
+    }
+
+    .heart.animate {
+      animation: pop 3s ease-out forwards;
     }
 
     @keyframes pop {
@@ -80,7 +83,6 @@
   <div class="counter" id="thoughtCounter">Loading...</div>
 </div>
 
-<!-- Heart animation element -->
 <div class="heart" id="heart">❤️</div>
 
 <script>
@@ -113,8 +115,8 @@
   const maxStartOffset = 180 * 1000; // 3 minutes in ms
   const startOffset = Math.floor(Math.random() * maxStartOffset);
   let thoughtStartTime = new Date(Date.now() - startOffset);
-  let firstReset = true;
   let nextResetInterval = maxStartOffset - startOffset;
+  let firstReset = true;
 
   function getRandomResetTime() {
     const min = 2 * 1000;
@@ -148,12 +150,12 @@
 
   function triggerHeartAnimation() {
     const heart = document.getElementById("heart");
-    heart.style.animation = 'none';
-    void heart.offsetWidth;
-    heart.style.animation = 'pop 5s ease-out forwards';
+    heart.classList.remove("animate");
+    void heart.offsetWidth; // force reflow
+    heart.classList.add("animate");
   }
 
-  // Start updates
+  // Start everything
   updateHugCounter();
   updateThoughtCounter();
   setInterval(updateHugCounter, 1000);
