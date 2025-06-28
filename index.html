@@ -111,9 +111,10 @@
     `;
   }
 
-  // Thought counter — max 3 minutes
+    // Thought counter — max 3 minutes
   const maxStartOffset = 180 * 1000; // 3 minutes in ms
-  const startOffset = Math.floor(Math.random() * maxStartOffset);
+  const minStartOffset = 5 * 1000;   // minimum 5 seconds after load
+  const startOffset = Math.floor(Math.random() * (maxStartOffset - minStartOffset)) + minStartOffset;
   let thoughtStartTime = new Date(Date.now() - startOffset);
   let nextResetInterval = maxStartOffset - startOffset;
   let firstReset = true;
