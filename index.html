@@ -94,7 +94,7 @@
     let diff = now - hugStartTime;
 
     if (diff < 0) {
-      document.getElementById("hugCounter").innerHTML = "Non è ancora successo 💔";
+      document.getElementById("hugCounter").innerHTML = "Non è ancora successo";
       return;
     }
 
@@ -149,12 +149,13 @@
     `;
   }
 
-  function triggerHeartAnimation() {
-    const heart = document.getElementById("heart");
-    heart.classList.remove("animate");
-    void heart.offsetWidth; // force reflow
-    heart.classList.add("animate");
-  }
+  //function triggerHeartAnimation() {
+    //const heart = document.getElementById("heart");
+    //heart.classList.remove("animate");
+    //void heart.offsetWidth; // force reflow
+    //heart.classList.add("animate");
+  //}
+
 
   // Start everything
   updateHugCounter();
